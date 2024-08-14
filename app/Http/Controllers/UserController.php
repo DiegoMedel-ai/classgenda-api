@@ -1,0 +1,94 @@
+<?php
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\Usuario;
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        return response()->json(Usuario::all(), 200);
+    }
+
+    public function profesores()
+    {
+        return response()->json(Usuario::select('id', 'nombre', 'apellido')->where("rol", 3)->get(),200);
+    }
+
+    public function lastIndex()
+    {
+        $lastUser = Usuario::latest('id')->first();
+
+        if ($lastUser) {
+            $nextId = $lastUser->id + 1;
+        } else {
+            $nextId = 1;
+        }
+
+        return response()->json(['id' => $nextId]);
+    } 
+
+    public function login(Request $request) {
+        $user = Usuario::with('tipos_usuario')->where('correo', $request->correo)->first();
+        if ($user) {
+            if (hash('sha512', $request->password ) != $user->contraseña) {
+                return response()->json(["message" => "Passowrd not match"], 401);
+            }else {
+                return response()->json(["user" => ["id" => $user->id, "rol" => $user->tipos_usuario->rol]], 200);
+            }
+        } else {
+            return response()->json(["message" => "User doesnt exists"], 402);
+        }
+    }
+
+    public function show(Request $request){
+        $usuario = Usuario::where("id", $request->id)->first();
+        if ($usuario) {
+            return response()->json(["nombre"=> $usuario->nombre." ".$usuario->apellido, "foto_url" => $usuario->foto_url]);
+        }else {
+            return response()->json(["message"=> "User not found"], 400);
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $user = new Usuario;
+        $user->rol = $request->rol ?? 2;
+        $user->nombre = $request->nombre ?? "";
+        $user->apellido = $request->apellido ?? "";
+        $user->correo = $request->correo ?? "";
+        $user->carrera = $request->carrera ?? "";
+        $user->centro = $request->centro ?? "";
+        $user->situacion = 1;
+        $user->telefono = $request->telefono ?? "";
+        $user->foto_url = $request->foto_url ?? "";
+        $user->contraseña = $request->password ? hash('sha512', $request->password) : "";
+
+        $user->save();
+
+        return response()->json(["message" => "User stored."], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        $user = Usuario::find($id);
+
+        if ($user) {
+            $user->delete();
+            return response()->json(["message" => "User deleted."], 200);
+        } else {
+            return response()->json(["message" => "User not found."], 404);
+        }
+    }
+}
