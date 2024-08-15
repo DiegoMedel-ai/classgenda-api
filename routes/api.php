@@ -11,8 +11,10 @@ Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/last', [UserController::class, 'lastIndex']);
 Route::post('/users/new', [UserController::class, 'store']);
 Route::post('/users/login', [UserController::class, 'login']);
+Route::post('/users/update', [UserController::class, 'update']);
 Route::post('/users/show', [UserController::class, 'show']);
 Route::get('/profesores', [UserController::class, 'profesores']);
+Route::get('/alumnos', [UserController::class, 'alumnosInfo']);
 
 Route::get('/materias', [MateriaController::class,'index']);
 Route::post('/materias/new', [MateriaController::class,'store']);

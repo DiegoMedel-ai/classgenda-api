@@ -20,6 +20,11 @@ class UserController extends Controller
         return response()->json(Usuario::select('id', 'nombre', 'apellido')->where("rol", 3)->get(),200);
     }
 
+    public function alumnosInfo()
+    {
+        return response()->json(Usuario::where("rol", 2)->get()->makeHidden('constraseña'), 200);
+    }
+
     public function lastIndex()
     {
         $lastUser = Usuario::latest('id')->first();
@@ -36,7 +41,9 @@ class UserController extends Controller
     public function login(Request $request) {
         $user = Usuario::with('tipos_usuario')->where('correo', $request->correo)->first();
         if ($user) {
-            if (hash('sha512', $request->password ) != $user->contraseña) {
+            if ($user->situacion != 1) {
+                return response()->json(["message" => "User doesnt exists"], 402);
+            } else if (hash('sha512', $request->password ) != $user->contraseña) {
                 return response()->json(["message" => "Passowrd not match"], 401);
             }else {
                 return response()->json(["user" => ["id" => $user->id, "rol" => $user->tipos_usuario->rol]], 200);
@@ -75,6 +82,25 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(["message" => "User stored."], 200);
+    }
+
+    public function update(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id' => 'integer|required',
+            'rol' => 'integer|required',
+            'correo' => 'string|required',
+            'centro' => 'string|required',
+            'carrera' => 'string|required',
+            'nombre' => 'string|required',
+            'apellido' => 'string|required',
+            'situacion' => 'integer|required',
+            'foto_url' => 'string|nullable',
+            'telefono' => 'string|nullable',
+        ]);
+
+        $usuario = Usuario::findOrFail($validatedData['id'])->update($validatedData);
+        return response()->json($usuario, 200);
     }
 
     /**
