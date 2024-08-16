@@ -14,7 +14,7 @@ class MateriaController extends Controller
      */
     public function index()
     {
-        $materia = Materia::with('profesor:id,nombre', 'programa:clave,nombre')->get();
+        $materia = Materia::with('profesor:id,nombre,apellido', 'programa:clave,nombre')->get();
         return response()->json($materia, 200);
     }
 

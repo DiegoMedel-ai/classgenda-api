@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\MateriaController;
+use App\Http\Controllers\InscripcionController;
 
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/last', [UserController::class, 'lastIndex']);
@@ -23,3 +24,5 @@ Route::post('/materias/update', [MateriaController::class,'update']);
 Route::get('/programas', [ProgramaController::class,'index']);
 Route::post('/programas/new', [ProgramaController::class,'store']);
 Route::post('/programas/update', [ProgramaController::class,'update']);
+
+Route::get('/inscripciones/{id}', [InscripcionController::class,'index']);
