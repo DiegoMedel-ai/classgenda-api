@@ -17,7 +17,7 @@ class UserController extends Controller
 
     public function profesores()
     {
-        return response()->json(Usuario::select('id', 'nombre', 'apellido')->where("rol", 3)->get(),200);
+        return response()->json(Usuario::where("rol", 3)->get()->makeHidden('constraseña'), 200);
     }
 
     public function alumnosInfo()

@@ -90,6 +90,11 @@ class ProgramaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (isset($id)) {
+            Programa::where('clave', $id)->delete();
+            return response()->json(['message' => 'programa deleted'],200);
+        }else {
+            return response()->json(['message'=> 'id required'],404);
+        }
     }
 }

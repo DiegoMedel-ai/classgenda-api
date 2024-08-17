@@ -76,6 +76,17 @@ class MateriaController extends Controller
         return response()->json($materia, 200);
     }
 
+    public function updateProfesor(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nrc' => 'required|integer',
+            'profesor' => 'nullable|integer'
+        ]);
+
+        $materia = Materia::findOrFail($validatedData['nrc'])->update($validatedData);
+        return response()->json($materia,200);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -84,6 +95,11 @@ class MateriaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (isset($id)) {
+            Materia::where('nrc', $id)->delete();
+            return response()->json(['message' => 'materia deleted'],200);
+        }else {
+            return response()->json(['message'=> 'id required'],404);
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inscripcion;
+use App\Models\Materia;
 use Illuminate\Http\Request;
 
 class InscripcionController extends Controller
@@ -19,6 +20,13 @@ class InscripcionController extends Controller
         return response()->json($inscripciones, 200);
     }
 
+    public function horarioProfesor($id)
+    {
+        $inscripciones = Materia::with('programa:clave,nombre', 'profesor:id,nombre,apellido')->where('profesor', $id)->get();
+
+        return response()->json($inscripciones,200);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -27,7 +35,13 @@ class InscripcionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'usuario'=> 'integer|required',
+            'materia'=> 'integer|required'
+        ]);
+
+        $inscripcion = Inscripcion::create($validatedData);
+        return response()->json($inscripcion,200);
     }
 
     /**
@@ -61,6 +75,12 @@ class InscripcionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (isset($id)) {
+            Inscripcion::where('id', $id)->delete();
+            return response()->json(['message' => 'inscripcion deleted'],200);
+        }else {
+            return response()->json(['message'=> 'id required'],404);
+        }
+
     }
 }
