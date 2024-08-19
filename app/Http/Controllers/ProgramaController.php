@@ -53,7 +53,9 @@ class ProgramaController extends Controller
      */
     public function show($id)
     {
-        //
+        $programa = Programa::findOrFail($id);
+
+        return response()->json($programa, 200);
     }
 
     /**

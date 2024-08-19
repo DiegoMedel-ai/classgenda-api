@@ -28,6 +28,7 @@ Route::get('/materias/delete/{id}', [MateriaController::class,'destroy']);
 Route::post('/materias/prof_update', [MateriaController::class,'updateProfesor']);
 
 Route::get('/programas', [ProgramaController::class,'index']);
+Route::get('/programas/{id}', [ProgramaController::class,'show']);
 Route::post('/programas/new', [ProgramaController::class,'store']);
 Route::post('/programas/update', [ProgramaController::class,'update']);
 Route::get('/programas/delete/{id}', [MateriaController::class,'destroy']);
