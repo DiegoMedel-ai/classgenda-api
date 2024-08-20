@@ -49,7 +49,8 @@ class MateriaController extends Controller
      */
     public function show($id)
     {
-        //
+        $materia = Materia::with('profesor:id,nombre,apellido', 'programa:clave,nombre')->findOrFail($id);
+        return response()->json($materia, 200);
     }
 
     /**
@@ -69,7 +70,8 @@ class MateriaController extends Controller
             'hora_final' => 'nullable|string',
             'edificio' => 'nullable|string',
             'aula' => 'nullable|integer',
-            'profesor' => 'nullable|integer'
+            'profesor' => 'nullable|integer',
+            'temas'=> 'nullable|string'
         ]);
 
         $materia = Materia::findOrFail($validatedData['nrc'])->update($validatedData);

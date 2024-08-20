@@ -49,7 +49,8 @@ class Materia extends Model
 		'hora_final',
 		'edificio',
 		'aula',
-		'profesor'
+		'profesor',
+		'temas'
 	];
 
 	public function profesor()

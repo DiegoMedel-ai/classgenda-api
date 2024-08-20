@@ -22,6 +22,7 @@ Route::get('/profesores/horario/{id}', [InscripcionController::class,'horarioPro
 Route::get('/alumnos', [UserController::class, 'alumnosInfo']);
 
 Route::get('/materias', [MateriaController::class,'index']);
+Route::get('/materias/{id}', [MateriaController::class,'show']);
 Route::post('/materias/new', [MateriaController::class,'store']);
 Route::post('/materias/update', [MateriaController::class,'update']);
 Route::get('/materias/delete/{id}', [MateriaController::class,'destroy']);
