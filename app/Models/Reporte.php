@@ -33,7 +33,7 @@ class Reporte extends Model
 	protected $fillable = [
 		'materia',
 		'semana',
-		'pdf_url',
+		'pdf_uid',
 		'temas'
 	];
 

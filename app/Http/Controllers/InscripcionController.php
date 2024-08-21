@@ -50,9 +50,10 @@ class InscripcionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showUsers($id)
     {
-        //
+        $users = Inscripcion::where('materia', $id)->with('usuario:id,nombre,apellido,foto_url')->select('usuario')->get();
+        return response()->json($users,200);
     }
 
     /**

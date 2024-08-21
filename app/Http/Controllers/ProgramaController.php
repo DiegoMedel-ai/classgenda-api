@@ -53,7 +53,7 @@ class ProgramaController extends Controller
      */
     public function show($id)
     {
-        $programa = Programa::findOrFail($id);
+        $programa = Programa::with('requisitoPrograma:clave,nombre', 'simultaneoPrograma:clave,nombre')->findOrFail($id);
 
         return response()->json($programa, 200);
     }

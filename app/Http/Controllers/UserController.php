@@ -17,7 +17,7 @@ class UserController extends Controller
 
     public function profesores()
     {
-        return response()->json(Usuario::where("rol", 3)->get()->makeHidden('constraseña'), 200);
+        return response()->json(Usuario::where("rol", 3)->orWhere("rol", 4)->get()->makeHidden('constraseña'), 200);
     }
 
     public function alumnosInfo()
@@ -62,6 +62,11 @@ class UserController extends Controller
         }
     }
 
+    public function getAllInfo($id){
+        $usuario = Usuario::where("id", $id)->first()->makeHidden("contraseña");
+        return response()->json($usuario, 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -74,7 +79,7 @@ class UserController extends Controller
         $user->correo = $request->correo ?? "";
         $user->carrera = $request->carrera ?? "";
         $user->centro = $request->centro ?? "";
-        $user->situacion = 1;
+        $user->situacion = 2;
         $user->telefono = $request->telefono ?? "";
         $user->foto_url = $request->foto_url ?? "";
         $user->contraseña = $request->password ? hash('sha512', $request->password) : "";

@@ -89,6 +89,17 @@ class MateriaController extends Controller
         return response()->json($materia,200);
     }
 
+    public function showMateriasPrograma($id){
+        $materias = Materia::with('profesor:id,nombre,apellido', 'programa:clave,nombre')->where('programa', $id)->get();
+        return response()->json($materias,200);
+    }
+
+    
+    public function getProfesoresMateria($id){
+        $profesores = Materia::where('programa', $id)->with('profesor:id,nombre,apellido,foto_url')->select('profesor')->distinct()->get();
+        return response()->json($profesores,200);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
