@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -65,6 +67,29 @@ class UserController extends Controller
     public function getAllInfo($id){
         $usuario = Usuario::where("id", $id)->first()->makeHidden("contraseña");
         return response()->json($usuario, 200);
+    }
+
+    public function storeImg(Request $request)
+    {
+        if ($request->hasFile('file') && $request->has('userId')) {
+            $file = $request->file('file');
+            $uniqueName = Str::uuid()->toString() . '.' . $file->getClientOriginalExtension();
+    
+            $user = Usuario::where('id', $request->userId)->first();
+    
+            if (!is_null($user->foto_url)) {
+                $filePath = 'public/img/' . $user->foto_url;
+                if (Storage::exists($filePath)) {
+                    Storage::delete($filePath);
+                }
+            }
+            $user->update(['foto_url' => $uniqueName]);
+            $path = $file->storeAs('public/img', $uniqueName);
+    
+            return response()->json(['path' => $path], 200);
+        }
+    
+        return response()->json(['error' => 'No file uploaded'], 400);
     }
 
     /**

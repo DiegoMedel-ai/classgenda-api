@@ -16,7 +16,8 @@ Route::post('/users/login', [UserController::class, 'login']);
 Route::post('/users/update', [UserController::class, 'update']);
 Route::post('/users/show', [UserController::class, 'show']);
 Route::get('/users/delete/{id}', [UserController::class,'destroy']);
-Route::get('/users/getProfesor/{id}', [UserController::class,'getAllInfo']);
+Route::get('/users/getAllInfo/{id}', [UserController::class,'getAllInfo']);
+Route::post('/users/storeImg', [UserController::class, 'storeImg']);
 
 Route::get('/profesores', [UserController::class, 'profesores']);
 Route::get('/profesores/materia/{id}', [MateriaController::class, 'getProfesoresMateria']);
