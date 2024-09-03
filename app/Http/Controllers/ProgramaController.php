@@ -38,7 +38,8 @@ class ProgramaController extends Controller
             'horas_practica' => 'nullable|integer',
             'horas_curso' => 'nullable|integer',
             'descripcion' => 'nullable|string',
-            'perfil_egreso' => 'nullable|string'
+            'perfil_egreso' => 'nullable|string',
+            'temas' => 'nullable|string'
         ]);
 
         $programa = Programa::create($validatedData);
@@ -77,7 +78,8 @@ class ProgramaController extends Controller
             'horas_practica' => 'nullable|integer',
             'horas_curso' => 'nullable|integer',
             'descripcion' => 'nullable|string',
-            'perfil_egreso' => 'nullable|string'
+            'perfil_egreso' => 'nullable|string',
+            'temas' => 'nullable|string'
         ]);
 
         $programa = Programa::findOrFail($validatedData['clave'])->update($validatedData);

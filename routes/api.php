@@ -37,7 +37,7 @@ Route::get('/programas', [ProgramaController::class,'index']);
 Route::get('/programas/{id}', [ProgramaController::class,'show']);
 Route::post('/programas/new', [ProgramaController::class,'store']);
 Route::post('/programas/update', [ProgramaController::class,'update']);
-Route::get('/programas/delete/{id}', [MateriaController::class,'destroy']);
+Route::get('/programas/delete/{id}', [ProgramaController::class,'destroy']);
 
 Route::get('/inscripciones/{id}', [InscripcionController::class,'index']);
 Route::get('/inscripciones/delete/{id}', [InscripcionController::class,'destroy']);

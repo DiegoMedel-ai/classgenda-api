@@ -52,7 +52,9 @@ class Programa extends Model
 		'horas_practica',
 		'horas_curso',
 		'descripcion',
-		'perfil_egreso'
+		'perfil_egreso',
+		'temas',
+		'departamento'
 	];
 
 	public function requisitoPrograma()
