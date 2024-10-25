@@ -8,6 +8,7 @@ use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\AcademiaController;
 
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/last', [UserController::class, 'lastIndex']);
@@ -46,3 +47,6 @@ Route::get('/inscripciones/users/{id}', [InscripcionController::class,'showUsers
 
 Route::post('/reportes/upload', [FileController::class, 'store']);
 Route::get('/reportes/{nrc}', [FileController::class, 'show']);
+
+Route::get('/academias', [AcademiaController::class, 'indexAcademias']);
+Route::get('/departamentos', [AcademiaController::class, 'indexDepartamentos']);

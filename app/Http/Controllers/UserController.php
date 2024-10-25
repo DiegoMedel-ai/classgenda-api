@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Usuario;
+use App\Models\Departamento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -19,7 +20,7 @@ class UserController extends Controller
 
     public function profesores()
     {
-        return response()->json(Usuario::where("rol", 3)->orWhere("rol", 4)->get()->makeHidden('constraseña'), 200);
+        return response()->json(Usuario::where("rol", 3)->orWhere("rol", 4)->orWhere("rol", 5)->get()->makeHidden('constraseña'), 200);
     }
 
     public function alumnosInfo()
@@ -48,7 +49,20 @@ class UserController extends Controller
             } else if (hash('sha512', $request->password ) != $user->contraseña) {
                 return response()->json(["message" => "Passowrd not match"], 401);
             }else {
-                return response()->json(["user" => ["id" => $user->id, "rol" => $user->tipos_usuario->rol]], 200);
+                $departamentos = [];
+
+                switch ($user->tipos_usuario->rol) {
+                    case 'presidente_academia':
+                        $departamentos = Departamento::where('academia', $user->academia)->pluck('id');
+                        break;
+                    case 'jefe_departamento':
+                        $departamentos = [$user->departamento];
+                        break;
+                    default:
+                        break;
+                }
+
+                return response()->json(["user" => ["id" => $user->id, "rol" => $user->tipos_usuario->rol, "departamentos" => $departamentos]], 200);
             }
         } else {
             return response()->json(["message" => "User doesnt exists"], 402);
@@ -127,6 +141,8 @@ class UserController extends Controller
             'situacion' => 'integer|required',
             'foto_url' => 'string|nullable',
             'telefono' => 'string|nullable',
+            'academia' => 'integer|nullable',
+            'departamento' => 'integer|nullable'
         ]);
 
         $usuario = Usuario::findOrFail($validatedData['id'])->update($validatedData);

@@ -6,10 +6,13 @@ use App\Models\Inscripcion;
 use App\Models\Materia;
 use Illuminate\Http\Request;
 
+/**
+ * Controlador de las funciones que corresponden a las inscripciones
+ */
 class InscripcionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra la lista de las inscripciones con el profesor y el programa al que pertenece
      *
      * @return \Illuminate\Http\Response
      */
@@ -20,6 +23,11 @@ class InscripcionController extends Controller
         return response()->json($inscripciones, 200);
     }
 
+    /**
+     * Muestra la lista del horario del profesor segun las materias en las que esté matriculado
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function horarioProfesor($id)
     {
         $inscripciones = Materia::with('programa:clave,nombre', 'profesor:id,nombre,apellido')->where('profesor', $id)->get();
@@ -28,7 +36,7 @@ class InscripcionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Crea una nueva inscripcion con el id del usuario y la materia a matricular
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -45,7 +53,7 @@ class InscripcionController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Muestra la lista de usuarios que están inscritos en una materia
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -57,19 +65,7 @@ class InscripcionController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
+     * Borra el registro de la inscripcion del usuario
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

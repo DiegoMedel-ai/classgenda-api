@@ -52,7 +52,9 @@ class Usuario extends Model
 		'situacion',
 		'telefono',
 		'foto_url',
-		'contraseña'
+		'contraseña',
+		'academia',
+		'departamento'
 	];
 
 	public function tipos_usuario()
