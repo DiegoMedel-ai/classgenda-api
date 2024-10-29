@@ -3,7 +3,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Usuario;
+use App\Models\Departamento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -17,7 +20,12 @@ class UserController extends Controller
 
     public function profesores()
     {
-        return response()->json(Usuario::select('id', 'nombre', 'apellido')->where("rol", 3)->get(),200);
+        return response()->json(Usuario::where("rol", 3)->orWhere("rol", 4)->orWhere("rol", 5)->get()->makeHidden('constraseña'), 200);
+    }
+
+    public function alumnosInfo()
+    {
+        return response()->json(Usuario::where("rol", 2)->get()->makeHidden('constraseña'), 200);
     }
 
     public function lastIndex()
@@ -36,10 +44,25 @@ class UserController extends Controller
     public function login(Request $request) {
         $user = Usuario::with('tipos_usuario')->where('correo', $request->correo)->first();
         if ($user) {
-            if (hash('sha512', $request->password ) != $user->contraseña) {
+            if ($user->situacion != 1) {
+                return response()->json(["message" => "User doesnt exists"], 402);
+            } else if (hash('sha512', $request->password ) != $user->contraseña) {
                 return response()->json(["message" => "Passowrd not match"], 401);
             }else {
-                return response()->json(["user" => ["id" => $user->id, "rol" => $user->tipos_usuario->rol]], 200);
+                $departamentos = [];
+
+                switch ($user->tipos_usuario->rol) {
+                    case 'presidente_academia':
+                        $departamentos = Departamento::where('academia', $user->academia)->pluck('id');
+                        break;
+                    case 'jefe_departamento':
+                        $departamentos = [$user->departamento];
+                        break;
+                    default:
+                        break;
+                }
+
+                return response()->json(["user" => ["id" => $user->id, "rol" => $user->tipos_usuario->rol, "departamentos" => $departamentos]], 200);
             }
         } else {
             return response()->json(["message" => "User doesnt exists"], 402);
@@ -55,6 +78,34 @@ class UserController extends Controller
         }
     }
 
+    public function getAllInfo($id){
+        $usuario = Usuario::where("id", $id)->first()->makeHidden("contraseña");
+        return response()->json($usuario, 200);
+    }
+
+    public function storeImg(Request $request)
+    {
+        if ($request->hasFile('file') && $request->has('userId')) {
+            $file = $request->file('file');
+            $uniqueName = Str::uuid()->toString() . '.' . $file->getClientOriginalExtension();
+    
+            $user = Usuario::where('id', $request->userId)->first();
+    
+            if (!is_null($user->foto_url)) {
+                $filePath = 'public/img/' . $user->foto_url;
+                if (Storage::exists($filePath)) {
+                    Storage::delete($filePath);
+                }
+            }
+            $user->update(['foto_url' => $uniqueName]);
+            $path = $file->storeAs('public/img', $uniqueName);
+    
+            return response()->json(['path' => $path], 200);
+        }
+    
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -67,7 +118,7 @@ class UserController extends Controller
         $user->correo = $request->correo ?? "";
         $user->carrera = $request->carrera ?? "";
         $user->centro = $request->centro ?? "";
-        $user->situacion = 1;
+        $user->situacion = 2;
         $user->telefono = $request->telefono ?? "";
         $user->foto_url = $request->foto_url ?? "";
         $user->contraseña = $request->password ? hash('sha512', $request->password) : "";
@@ -75,6 +126,27 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(["message" => "User stored."], 200);
+    }
+
+    public function update(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id' => 'integer|required',
+            'rol' => 'integer|required',
+            'correo' => 'string|required',
+            'centro' => 'string|required',
+            'carrera' => 'string|required',
+            'nombre' => 'string|required',
+            'apellido' => 'string|required',
+            'situacion' => 'integer|required',
+            'foto_url' => 'string|nullable',
+            'telefono' => 'string|nullable',
+            'academia' => 'integer|nullable',
+            'departamento' => 'integer|nullable'
+        ]);
+
+        $usuario = Usuario::findOrFail($validatedData['id'])->update($validatedData);
+        return response()->json($usuario, 200);
     }
 
     /**

@@ -38,7 +38,9 @@ class ProgramaController extends Controller
             'horas_practica' => 'nullable|integer',
             'horas_curso' => 'nullable|integer',
             'descripcion' => 'nullable|string',
-            'perfil_egreso' => 'nullable|string'
+            'perfil_egreso' => 'nullable|string',
+            'temas' => 'nullable|string',
+            'departamento' => 'nullable|integer'
         ]);
 
         $programa = Programa::create($validatedData);
@@ -53,7 +55,9 @@ class ProgramaController extends Controller
      */
     public function show($id)
     {
-        //
+        $programa = Programa::with('requisitoPrograma:clave,nombre', 'simultaneoPrograma:clave,nombre')->findOrFail($id);
+
+        return response()->json($programa, 200);
     }
 
     /**
@@ -75,7 +79,9 @@ class ProgramaController extends Controller
             'horas_practica' => 'nullable|integer',
             'horas_curso' => 'nullable|integer',
             'descripcion' => 'nullable|string',
-            'perfil_egreso' => 'nullable|string'
+            'perfil_egreso' => 'nullable|string',
+            'temas' => 'nullable|string',
+            'departamento' => 'nullable|integer'
         ]);
 
         $programa = Programa::findOrFail($validatedData['clave'])->update($validatedData);
@@ -90,6 +96,11 @@ class ProgramaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (isset($id)) {
+            Programa::where('clave', $id)->delete();
+            return response()->json(['message' => 'programa deleted'],200);
+        }else {
+            return response()->json(['message'=> 'id required'],404);
+        }
     }
 }
