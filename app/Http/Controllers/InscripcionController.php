@@ -60,7 +60,7 @@ class InscripcionController extends Controller
      */
     public function showUsers($id)
     {
-        $users = Inscripcion::where('materia', $id)->with('usuario:id,nombre,apellido,foto_url')->select('usuario')->get();
+        $users = Inscripcion::where('materia', $id)->with('usuario:id,nombre,apellido,foto_url,codigo')->select('usuario')->get();
         return response()->json($users,200);
     }
 

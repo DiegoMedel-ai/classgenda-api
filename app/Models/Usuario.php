@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Usuario
  * 
  * @property int $id
+ * @property string $codigo
  * @property int $rol
  * @property string $correo
  * @property string $nombre
@@ -43,6 +44,7 @@ class Usuario extends Model
 	];
 
 	protected $fillable = [
+		'codigo',
 		'rol',
 		'correo',
 		'nombre',
