@@ -55,7 +55,7 @@ class MateriaController extends Controller
     public function show($id)
     {
         // Busca la materia por su ID e incluye el profesor y programa asociados
-        $materia = Materia::with('profesor:id,nombre,apellido', 'programa:clave,nombre')->findOrFail($id);
+        $materia = Materia::with('profesor:id,nombre,apellido,codigo', 'programa:clave,nombre')->findOrFail($id);
         return response()->json($materia, 200);
     }
 
