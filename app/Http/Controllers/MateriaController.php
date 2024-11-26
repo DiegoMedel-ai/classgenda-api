@@ -112,7 +112,7 @@ class MateriaController extends Controller
      */
     public function showMateriasPrograma($id)
     {
-        $materias = Materia::with('profesor:id,nombre,apellido', 'programa:clave,nombre')->where('programa', $id)->get();
+        $materias = Materia::with('profesor:id,nombre,apellido,codigo', 'programa:clave,nombre')->where('programa', $id)->get();
         return response()->json($materias, 200);
     }
 
@@ -124,7 +124,7 @@ class MateriaController extends Controller
      */
     public function getProfesoresMateria($id)
     {
-        $profesores = Materia::where('programa', $id)->with('profesor:id,nombre,apellido,foto_url')->select('profesor')->distinct()->get();
+        $profesores = Materia::where('programa', $id)->with('profesor:id,nombre,apellido,foto_url,codigo')->select('profesor')->distinct()->get();
         return response()->json($profesores, 200);
     }
 
