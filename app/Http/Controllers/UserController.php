@@ -72,7 +72,7 @@ class UserController extends Controller
     public function show(Request $request){
         $usuario = Usuario::where("id", $request->id)->first();
         if ($usuario) {
-            return response()->json(["nombre"=> $usuario->nombre." ".$usuario->apellido, "foto_url" => $usuario->foto_url]);
+            return response()->json(["nombre"=> $usuario->nombre." ".$usuario->apellido, "foto_url" => $usuario->foto_url, "codigo" => $usuario->codigo]);
         }else {
             return response()->json(["message"=> "User not found"], 400);
         }
@@ -112,6 +112,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $user = new Usuario;
+        $user->codigo = $request->codigo ?? "";
         $user->rol = $request->rol ?? 2;
         $user->nombre = $request->nombre ?? "";
         $user->apellido = $request->apellido ?? "";
@@ -132,6 +133,7 @@ class UserController extends Controller
     {
         $validatedData = $request->validate([
             'id' => 'integer|required',
+            'codigo' => 'string|required',
             'rol' => 'integer|required',
             'correo' => 'string|required',
             'centro' => 'string|required',
