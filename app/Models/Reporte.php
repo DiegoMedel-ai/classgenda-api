@@ -34,7 +34,8 @@ class Reporte extends Model
 		'materia',
 		'semana',
 		'pdf_uid',
-		'temas'
+		'temas',
+		'descripcion'
 	];
 
 	public function materia()
