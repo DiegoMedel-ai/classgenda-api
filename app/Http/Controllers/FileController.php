@@ -48,6 +48,7 @@ class FileController extends Controller
                     $report->pdf_uid = $uniqueName;
                     $report->temas = $request->temas;
                     $report->semana = $request->semana;
+                    $report->descripcion = $request->descripcion;
                     $report->save();
                 }
         
@@ -62,6 +63,7 @@ class FileController extends Controller
                 $report->pdf_uid = '';
                 $report->temas = $request->temas;
                 $report->semana = $request->semana;
+                $report->descripcion = $request->descripcion;
                 $report->save();
                 return response()->json(['message' => 'Report created'], 200);
             }
